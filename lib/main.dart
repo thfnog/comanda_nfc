@@ -15,7 +15,7 @@ bool shouldUseFirebaseEmulator = false;
 // e.g via `melos run firebase:emulator`.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); // TODO verificar se o arquivo gerado é commitavel
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   if (shouldUseFirebaseEmulator) {
     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
