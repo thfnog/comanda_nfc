@@ -1,230 +1,80 @@
-import 'dart:async';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 
-import './read_example_screen.dart';
-import './write_example_screen.dart';
+import 'auth.dart';
+import 'firebase_options.dart';
+import 'profile.dart';
 
-void main() => runApp(ExampleApp());
+/// Requires that a Firebase local emulator is running locally.
+/// See https://firebase.flutter.dev/docs/auth/start/#optional-prototype-and-test-with-firebase-local-emulator-suite
+bool shouldUseFirebaseEmulator = false;
 
-class ExampleApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("NFC in Flutter examples"),
-        ),
-        body: Builder(builder: (context) {
-          return ListView(
-            children: <Widget>[
-              ListTile(
-                title: const Text("Read NFC"),
-                onTap: () {
-                  Navigator.pushNamed(context, "/read_example");
-                },
-              ),
-              ListTile(
-                title: const Text("Write NFC"),
-                onTap: () {
-                  Navigator.pushNamed(context, "/write_example");
-                },
-              ),
-            ],
-          );
-        }),
-      ),
-      routes: {
-        "/read_example": (context) => ReadExampleScreen(),
-        "/write_example": (context) => WriteExampleScreen(),
-      },
-    );
+// Requires that the Firebase Auth emulator is running locally
+// e.g via `melos run firebase:emulator`.
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); // TODO verificar se o arquivo gerado é commitavel
+
+  if (shouldUseFirebaseEmulator) {
+    await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   }
+
+  runApp(const AuthExampleApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  // _stream is a subscription to the stream returned by `NFC.read()`.
-  // The subscription is stored in state so the stream can be canceled later
-  StreamSubscription<NDEFMessage>? _stream;
-
-  // _tags is a list of scanned tags
-  List<NDEFMessage> _tags = [];
-
-  bool _supportsNFC = false;
-
-  // _readNFC() calls `NFC.readNDEF()` and stores the subscription and scanned
-  // tags in state
-  void _readNFC(BuildContext context) {
-    try {
-      // ignore: cancel_subscriptions
-      StreamSubscription<NDEFMessage> subscription = NFC.readNDEF().listen(
-              (tag) {
-            // On new tag, add it to state
-            setState(() {
-              _tags.insert(0, tag);
-            });
-          },
-          // When the stream is done, remove the subscription from state
-          onDone: () {
-            setState(() {
-              _stream = null;
-            });
-          },
-          // Errors are unlikely to happen on Android unless the NFC tags are
-          // poorly formatted or removed too soon, however on iOS at least one
-          // error is likely to happen. NFCUserCanceledSessionException will
-          // always happen unless you call readNDEF() with the `throwOnUserCancel`
-          // argument set to false.
-          // NFCSessionTimeoutException will be thrown if the session timer exceeds
-          // 60 seconds (iOS only).
-          // And then there are of course errors for unexpected stuff. Good fun!
-          onError: (e) {
-            setState(() {
-              _stream = null;
-            });
-
-            if (!(e is NFCUserCanceledSessionException)) {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Error!"),
-                  content: Text(e.toString()),
-                ),
-              );
-            }
-          });
-
-      setState(() {
-        _stream = subscription;
-      });
-    } catch (err) {
-      print("error: $err");
-    }
-  }
-
-  // _stopReading() cancels the current reading stream
-  void _stopReading() {
-    _stream?.cancel();
-    setState(() {
-      _stream = null;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    NFC.isNDEFSupported.then((supported) {
-      setState(() {
-        _supportsNFC = true;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _stream?.cancel();
-  }
+/// The entry point of the application.
+///
+/// Returns a [MaterialApp].
+class AuthExampleApp extends StatelessWidget {
+  const AuthExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
+      title: 'Firebase Example App',
+      theme: ThemeData(primarySwatch: Colors.amber),
       home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: const Text('NFC in Flutter'),
-          actions: <Widget>[
-            Builder(
-              builder: (context) {
-                if (!_supportsNFC) {
-                  return TextButton(
-                    child: Text("NFC unsupported"),
-                    onPressed: null,
-                  );
-                }
-                return TextButton(
-                  child:
-                  Text(_stream == null ? "Start reading" : "Stop reading"),
-                  onPressed: () {
-                    if (_stream == null) {
-                      _readNFC(context);
-                    } else {
-                      _stopReading();
-                    }
-                  },
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.clear_all),
-              onPressed: () {
-                setState(() {
-                  _tags.clear();
-                });
-              },
-              tooltip: "Clear",
-            ),
-          ],
-        ),
-        // Render list of scanned tags
-        body: ListView.builder(
-          itemCount: _tags.length,
-          itemBuilder: (context, index) {
-            const TextStyle payloadTextStyle = const TextStyle(
-              fontSize: 15,
-              color: const Color(0xFF454545),
-            );
-
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text("NDEF Tag",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Builder(
-                    builder: (context) {
-                      // Build list of records
-                      List<Widget> records = [];
-                      for (int i = 0; i < _tags[index].records.length; i++) {
-                        records.add(Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
+        body: LayoutBuilder(
+          builder: (context, constraines) {
+            return Row(
+              children: [
+                Visibility(
+                  visible: constraines.maxWidth >= 1200,
+                  child: Expanded(
+                    child: Container(
+                      height: double.infinity,
+                      color: Theme.of(context).colorScheme.primary,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
                             Text(
-                              "Record ${i + 1} - ${_tags[index].records[i].type}",
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: const Color(0xFF666666),
-                              ),
-                            ),
-                            Text(
-                              _tags[index].records[i].payload,
-                              style: payloadTextStyle,
-                            ),
-                            Text(
-                              _tags[index].records[i].data,
-                              style: payloadTextStyle,
+                              'Firebase Auth Desktop',
+                              style: Theme.of(context).textTheme.headline4,
                             ),
                           ],
-                        ));
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: constraines.maxWidth >= 1200
+                      ? constraines.maxWidth / 2
+                      : constraines.maxWidth,
+                  child: StreamBuilder<User?>(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return const ProfilePage();
                       }
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: records,
-                      );
+                      return const AuthGate();
                     },
-                  )
-                ],
-              ),
+                  ),
+                ),
+              ],
             );
           },
         ),
