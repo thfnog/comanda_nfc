@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'auth.dart';
+import '../auth/auth_page.dart';
 
 /// Displayed as a profile image if the user doesn't have one.
 const placeholderImage =

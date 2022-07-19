@@ -15,7 +15,15 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+$ flutter clean
+$ flutter pub get
+$ flutter pub upgrade
+
 ## Generate firebase initialization file
-Ref.: https://codewithandrea.com/articles/flutter-firebase-flutterfire-cli/
+
+$ flutterfire configure
+
 If you get error "flutterfire: command not found", run the command below:
-$ export PATH="$PATH":"$HOME/.pub-cache/bin"
+- $ export PATH="$PATH":"$HOME/.pub-cache/bin"
+
+Ref.: https://codewithandrea.com/articles/flutter-firebase-flutterfire-cli/

@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:comanda_nfc/repositories/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -165,19 +165,6 @@ class _AuthGateState extends State<AuthGate> {
                                 ),
                               ],
                             ),
-                          if (mode == AuthMode.phone)
-                            TextFormField(
-                              controller: phoneController,
-                              decoration: const InputDecoration(
-                                hintText: '+12345678910',
-                                labelText: 'Phone number',
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) =>
-                                  value != null && value.isNotEmpty
-                                      ? null
-                                      : 'Required',
-                            ),
                           const SizedBox(height: 20),
                           SizedBox(
                             width: double.infinity,
@@ -193,96 +180,29 @@ class _AuthGateState extends State<AuthGate> {
                             onPressed: _resetPassword,
                             child: const Text('Forgot password?'),
                           ),
-                          ...authButtons.keys
-                              .map(
-                                (button) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  child: AnimatedSwitcher(
-                                    duration: const Duration(milliseconds: 200),
-                                    child: isLoading
-                                        ? Container(
-                                            color: Colors.grey[200],
-                                            height: 50,
-                                            width: double.infinity,
-                                          )
-                                        : SizedBox(
-                                            width: double.infinity,
-                                            height: 50,
-                                            child: SignInButton(
-                                              button,
-                                              onPressed: authButtons[button]!,
-                                            ),
-                                          ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: OutlinedButton(
-                              onPressed: isLoading
-                                  ? null
-                                  : () {
-                                      if (mode != AuthMode.phone) {
-                                        setState(() {
-                                          mode = AuthMode.phone;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          mode = AuthMode.login;
-                                        });
-                                      }
-                                    },
-                              child: isLoading
-                                  ? const CircularProgressIndicator.adaptive()
-                                  : Text(
-                                      mode != AuthMode.phone
-                                          ? 'Sign in with Phone Number'
-                                          : 'Sign in with Email and Password',
-                                    ),
-                            ),
-                          ),
                           const SizedBox(height: 20),
-                          if (mode != AuthMode.phone)
-                            RichText(
-                              text: TextSpan(
-                                style: Theme.of(context).textTheme.bodyText1,
-                                children: [
-                                  TextSpan(
-                                    text: mode == AuthMode.login
-                                        ? "Don't have an account? "
-                                        : 'You have an account? ',
-                                  ),
-                                  TextSpan(
-                                    text: mode == AuthMode.login
-                                        ? 'Register now'
-                                        : 'Click to login',
-                                    style: const TextStyle(color: Colors.blue),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        setState(() {
-                                          mode = mode == AuthMode.login
-                                              ? AuthMode.register
-                                              : AuthMode.login;
-                                        });
-                                      },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          const SizedBox(height: 10),
                           RichText(
                             text: TextSpan(
                               style: Theme.of(context).textTheme.bodyText1,
                               children: [
-                                const TextSpan(text: 'Or '),
                                 TextSpan(
-                                  text: 'continue as guest',
+                                  text: mode == AuthMode.login
+                                      ? "Don't have an account? "
+                                      : 'You have an account? ',
+                                ),
+                                TextSpan(
+                                  text: mode == AuthMode.login
+                                      ? 'Register now'
+                                      : 'Click to login',
                                   style: const TextStyle(color: Colors.blue),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = _anonymousAuth,
+                                    ..onTap = () {
+                                      setState(() {
+                                        mode = mode == AuthMode.login
+                                            ? AuthMode.register
+                                            : AuthMode.login;
+                                      });
+                                    },
                                 ),
                               ],
                             ),
@@ -370,10 +290,13 @@ class _AuthGateState extends State<AuthGate> {
             password: passwordController.text,
           );
         } else if (mode == AuthMode.register) {
-          await _auth.createUserWithEmailAndPassword(
+          var login = await _auth.createUserWithEmailAndPassword(
             email: emailController.text,
             password: passwordController.text,
           );
+          var uid = login.user?.uid.toString();
+          var username = login.user?.displayName.toString();
+          CloudFunctions().registerUser(uid, emailController.text, username);
         } else {
           await _phoneAuth();
         }

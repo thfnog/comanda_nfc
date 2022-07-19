@@ -3,9 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'auth.dart';
+import 'view/pages/auth/auth_page.dart';
 import 'firebase_options.dart';
-import 'profile.dart';
+import 'view/pages/landing_page.dart';
 
 /// Requires that a Firebase local emulator is running locally.
 /// See https://firebase.flutter.dev/docs/auth/start/#optional-prototype-and-test-with-firebase-local-emulator-suite
@@ -68,7 +68,7 @@ class AuthExampleApp extends StatelessWidget {
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        return const ProfilePage();
+                        return LandingMobilePage();
                       }
                       return const AuthGate();
                     },
