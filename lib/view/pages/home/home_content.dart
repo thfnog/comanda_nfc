@@ -1,3 +1,5 @@
+import 'package:comanda_nfc/model/report.dart';
+import 'package:comanda_nfc/view/pages/report_details/page/report_details_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../const/color_constants.dart';
@@ -38,11 +40,12 @@ class HomeContent extends StatelessWidget {
   }
 
   Widget _createCardsList(BuildContext context) {
+    var reports = List.generate(10, (index) => Report(name: "Fornecedor$index", value: index.toDouble()));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             TextConstants.discoverAnotherOptions,
             style: TextStyle(
@@ -53,7 +56,7 @@ class HomeContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 15),
-        Container(
+        SizedBox(
           height: 160,
           child: ListView(
             scrollDirection: Axis.horizontal,
@@ -97,11 +100,8 @@ class HomeContent extends StatelessWidget {
                   title: TextConstants.reportCardTitle,
                   description: TextConstants.reportCardDescription,
                   icon: Icons.report_sharp,
-                  onTap: () => {},
-                  // onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (_) => RegisterDetailsPage(
-                  //       register: DataConstants.workouts[2],
-                  //     )))
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => ReportDetailsPage(reports: reports)))
               ),
               const SizedBox(width: 20),
             ],

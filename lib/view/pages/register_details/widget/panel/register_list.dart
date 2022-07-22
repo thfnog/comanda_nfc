@@ -15,7 +15,7 @@ class RegisterList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.only(top: 10, bottom: 100),
       itemCount: register.length,
       itemBuilder: (context, index) {
         return RegisterCell(
@@ -55,6 +55,8 @@ class RegisterCell extends StatelessWidget {
           if (key == 'value') bloc.valueController.text = value;
           if (key == 'description') bloc.descriptionController.text = value;
         });
+
+        if(bloc.panelController.isPanelClosed) bloc.panelController.animatePanelToPosition(1.0);
       },
       child: Container(
         width: double.infinity,
@@ -75,7 +77,7 @@ class RegisterCell extends StatelessWidget {
             _createImage(),
             const SizedBox(width: 10),
             Expanded(
-              child: _createExerciseTextInfo(),
+              child: _createProductTextInfo(),
             ),
             const SizedBox(width: 10),
             _createRightArrow(),
@@ -99,12 +101,20 @@ class RegisterCell extends StatelessWidget {
     );
   }
 
-  Widget _createExerciseTextInfo() {
+  Widget _createProductTextInfo() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           currentRegister.name,
+          style: TextStyle(
+            color: ColorConstants.textColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        if (currentRegister.document.isNotEmpty) Text(
+          currentRegister.document,
           style: TextStyle(
             color: ColorConstants.textColor,
             fontSize: 16,

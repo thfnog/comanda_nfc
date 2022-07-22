@@ -1,3 +1,4 @@
+import 'package:comanda_nfc/const/text_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,9 +45,13 @@ class RegisterDetailsPanel extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.all(20),
         child: FitnessButton(
-          title: "Salvar",
+          title: TextConstants.saveRegisterCardButton,
           onTap: () {
             bloc.uid;
+            if (bloc.panelController.isAttached &&
+                bloc.panelController.isPanelOpen) {
+              bloc.panelController.animatePanelToPosition(0.0);
+            }
             // TODO: Salvar item no banco e atualizar lista
           },
         ));
@@ -60,20 +65,11 @@ class RegisterDetailsPanel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Text(
-        "Arraste para cadastrar",
+        TextConstants.panelRegisterCardDescription,
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
-      ),
-    );
-  }
-
-  Widget _createWorkoutData() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        children: [Text("Text")],
       ),
     );
   }
@@ -93,6 +89,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                 padding: EdgeInsets.all(5),
                 scrollDirection: Axis.vertical,
                 children: [
+                  if (register[0].title == 'Clientes') const SizedBox(height: 20),
                   if (register[0].title == 'Clientes')
                     FitnessTextField(
                       title: "Nome",
