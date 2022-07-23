@@ -7,9 +7,9 @@ class ProductData extends Register {
   final double value;
   final String description;
 
-  ProductData(
-    this.uid,
-    this.description, {
+  ProductData({
+    this.uid = '',
+    this.description = '',
     required this.name,
     required this.quantity,
     required this.value,

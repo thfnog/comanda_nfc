@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home/home_content.dart';
-import 'profile/profile_page.dart';
+
+import '../pages/home/home_content.dart';
+import '../pages/profile/profile_page.dart';
 
 class LandingMobilePage extends StatefulWidget {
   @override
@@ -43,10 +44,6 @@ class _LandingMobilePageState extends State<LandingMobilePage> {
                     size: Size(size.width, 80),
                     painter: BNBCustomPainter(),
                   ),
-                  Center(
-                    heightFactor: 0.6,
-                    child: FloatingActionButton(backgroundColor: Colors.orange, child: Icon(Icons.add_shopping_cart), elevation: 0.1, onPressed: () {}),
-                  ),
                   Container(
                     width: size.width,
                     height: 80,
@@ -85,6 +82,8 @@ class _LandingMobilePageState extends State<LandingMobilePage> {
       ),
     );
   }
+
+  bla() {}
 }
 
 class BNBCustomPainter extends CustomPainter {
@@ -112,4 +111,5 @@ class BNBCustomPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) {
     return false;
   }
+
 }

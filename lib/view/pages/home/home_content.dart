@@ -1,3 +1,4 @@
+import 'package:comanda_nfc/model/product_data.dart';
 import 'package:comanda_nfc/model/report.dart';
 import 'package:comanda_nfc/view/pages/report_details/page/report_details_page.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class HomeContent extends StatelessWidget {
   }
 
   Widget _createCardsList(BuildContext context) {
-    var reports = List.generate(10, (index) => Report(name: "Fornecedor$index", value: index.toDouble()));
+    List<Report> reports = buildReport();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -109,6 +110,20 @@ class HomeContent extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  List<Report> buildReport() {
+    var products = List.generate(
+        4,
+        (index) => ProductData(
+            name: "Produto$index", quantity: index + 3, value: index * 5));
+    var reports = List.generate(
+        10,
+        (index) => Report(
+            provider: "Fornecedor$index",
+            totalValue: index.toDouble() * 10,
+            products: products));
+    return reports;
   }
 
   Widget _createSlogan() {

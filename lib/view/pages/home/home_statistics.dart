@@ -155,15 +155,9 @@ class HomeStatistics extends StatelessWidget {
   }
 
   List<ProductData> buildTempProductsData() {
-    ProductData product1 = new ProductData('',
-        name: "Cerveja", quantity: 2, value: 15, "Cerveja X");
-    ProductData product2 = new ProductData('',
-        name: "Bolo", quantity: 10, value: 6, "Bolo X");
-    ProductData product3 = new ProductData('',
-        name: "Espeto de carne",
-        quantity: 20,
-        value: 7,
-        "Espeto X");
+    ProductData product1 = new ProductData(name: "Cerveja", quantity: 2, value: 15, description: "Cerveja X");
+    ProductData product2 = new ProductData(name: "Bolo", quantity: 10, value: 6, description: "Bolo X");
+    ProductData product3 = new ProductData(name: "Espeto de carne", quantity: 20, value: 7, description: "Espeto X");
     final products = <ProductData>[product1, product2, product3];
     return products;
   }

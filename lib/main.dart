@@ -1,3 +1,4 @@
+import 'package:comanda_nfc/view/widgets/float_button_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -5,14 +6,10 @@ import 'package:flutter/material.dart';
 
 import 'view/pages/auth/auth_page.dart';
 import 'firebase_options.dart';
-import 'view/pages/landing_page.dart';
+import 'view/widgets/landing_page.dart';
 
-/// Requires that a Firebase local emulator is running locally.
-/// See https://firebase.flutter.dev/docs/auth/start/#optional-prototype-and-test-with-firebase-local-emulator-suite
 bool shouldUseFirebaseEmulator = false;
 
-// Requires that the Firebase Auth emulator is running locally
-// e.g via `melos run firebase:emulator`.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -21,21 +18,18 @@ Future<void> main() async {
     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   }
 
-  runApp(const AuthExampleApp());
+  runApp(const InitApp());
 }
 
-/// The entry point of the application.
-///
-/// Returns a [MaterialApp].
-class AuthExampleApp extends StatelessWidget {
-  const AuthExampleApp({Key? key}) : super(key: key);
+class InitApp extends StatelessWidget {
+  const InitApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Firebase Example App',
       theme: ThemeData(primarySwatch: Colors.amber),
       home: Scaffold(
+        floatingActionButton: FloatButtonMenu(),
         body: LayoutBuilder(
           builder: (context, constraines) {
             return Row(

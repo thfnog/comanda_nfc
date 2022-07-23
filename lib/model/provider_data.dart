@@ -7,7 +7,8 @@ class ProviderData extends Register {
   final String responsible;
   final String phoneNumber;
 
-  ProviderData(this.uid, {
+  ProviderData({
+    this.uid = '',
     required this.providerName,
     required this.cnpj,
     required this.responsible,

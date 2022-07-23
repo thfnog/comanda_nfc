@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../const/path_constants.dart';
 import '../../../../../model/register.dart' as data;
-import '../../../../common_widgets/fitness_button.dart';
-import '../../../../common_widgets/fitness_text_field.dart';
+import '../../../../common_widgets/custom_button.dart';
+import '../../../../common_widgets/custom_text_field.dart';
 import '../../bloc/registerdetails_bloc.dart';
 
 class RegisterDetailsPanel extends StatelessWidget {
@@ -44,7 +44,7 @@ class RegisterDetailsPanel extends StatelessWidget {
     final bloc = BlocProvider.of<RegisterDetailsBloc>(context);
     return Padding(
         padding: EdgeInsets.all(20),
-        child: FitnessButton(
+        child: CustomButton(
           title: TextConstants.saveRegisterCardButton,
           onTap: () {
             bloc.uid;
@@ -91,7 +91,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                 children: [
                   if (register[0].title == 'Clientes') const SizedBox(height: 20),
                   if (register[0].title == 'Clientes')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "Nome",
                       placeholder: "Adicione um nome",
                       controller: bloc.nameController,
@@ -103,7 +103,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                     ),
                   if (register[0].title == 'Clientes') const SizedBox(height: 20),
                   if (register[0].title == 'Clientes')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "CPF",
                       placeholder: "Adicione o CPF",
                       controller: bloc.documentController,
@@ -115,7 +115,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                     ),
                   if (register[0].title == 'Fornecedores') const SizedBox(height: 20),
                   if (register[0].title == 'Fornecedores')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "Fornecedor",
                       placeholder: "Adicione o nome da empresa",
                       controller: bloc.nameController,
@@ -127,7 +127,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                     ),
                   if (register[0].title == 'Fornecedores') const SizedBox(height: 20),
                   if (register[0].title == 'Fornecedores')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "CNPJ",
                       placeholder: "Adicione o CNPJ",
                       controller: bloc.documentController,
@@ -139,7 +139,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                     ),
                   if (register[0].title == 'Fornecedores') const SizedBox(height: 20),
                   if (register[0].title == 'Fornecedores')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "Contato",
                       placeholder: "Adicione o contato",
                       controller: bloc.contactController,
@@ -154,7 +154,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                     const SizedBox(height: 20),
                   if (register[0].title == 'Clientes' ||
                       register[0].title == 'Fornecedores')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "Telefone",
                       placeholder: "Adicione o telefone",
                       controller: bloc.phoneNumberController,
@@ -166,7 +166,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                     ),
                   if (register[0].title == 'Produtos') const SizedBox(height: 20),
                   if (register[0].title == 'Produtos')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "Produto",
                       placeholder: "Adicione o nome do produto",
                       controller: bloc.nameController,
@@ -178,7 +178,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                     ),
                   if (register[0].title == 'Produtos') const SizedBox(height: 20),
                   if (register[0].title == 'Produtos')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "Quantidade",
                       placeholder: "Adicione uma quantidade",
                       textInputAction: TextInputAction.next,
@@ -191,7 +191,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                     ),
                   if (register[0].title == 'Produtos') const SizedBox(height: 20),
                   if (register[0].title == 'Produtos')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "Valor",
                       placeholder: "Adicione o valor",
                       textInputAction: TextInputAction.next,
@@ -204,7 +204,7 @@ class RegisterDetailsPanel extends StatelessWidget {
                     ),
                   if (register[0].title == 'Produtos') const SizedBox(height: 20),
                   if (register[0].title == 'Produtos')
-                    FitnessTextField(
+                    CustomTextField(
                       title: "Descrição",
                       placeholder: "Adicione uma descrição",
                       textInputAction: TextInputAction.next,

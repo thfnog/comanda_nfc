@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grouped_list/grouped_list.dart';
 
 import '../../../../../const/color_constants.dart';
 import '../../../../../model/report.dart';
 import '../../../../const/path_constants.dart';
+import '../../../../model/product_data.dart';
 import '../bloc/reportdetails_bloc.dart';
-import '../payment_methods.dart';
 import '../spending.dart';
 
 class ReportDetailsContent extends StatelessWidget {
@@ -26,7 +27,7 @@ class ReportDetailsContent extends StatelessWidget {
   Widget _buildReportContent(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: SingleChildScrollView(physics: const NeverScrollableScrollPhysics(),
         child: Stack(
           children: <Widget>[
             Column(
@@ -120,23 +121,56 @@ class ReportDetailsContent extends StatelessWidget {
               alignment: Alignment.topCenter,
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * .50,
-                  bottom: MediaQuery.of(context).size.height -100,
+                  bottom: MediaQuery.of(context).size.height - 100,
                   right: 20.0,
                   left: 20.0),
               child: Container(
                 height: MediaQuery.of(context).size.height * .50,
                 width: MediaQuery.of(context).size.width,
-                child: ListView.separated(
-                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  itemCount: reports.length,
-                  itemBuilder: (context, index) {
-                    return ReportCell(
-                      name: reports[index].name,
-                      amount: reports[index].value.toString(),
+                child: GroupedListView<dynamic, String>(
+                  elements: reports,
+                  groupBy: (element) => (element).provider,
+                  order: GroupedListOrder.ASC,
+                  useStickyGroupSeparators: true,
+                  groupSeparatorBuilder: (String value) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          value,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "R\$ " + buildTotal(value),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                  itemBuilder: (c, element) {
+                    return Column(
+                      children: [
+                        for (ProductData product in (element).products)
+                          Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: SizedBox(
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                title: Text(product.name),
+                                trailing: Text(product.quantity.toString()),
+                              ),
+                            ),
+                          )
+                      ],
                     );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(height: 15);
                   },
                 ),
               ),
@@ -145,6 +179,13 @@ class ReportDetailsContent extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String buildTotal(String value) {
+    return reports
+            .firstWhere((element) => element.provider == value)
+            .totalValue
+            .toString();
   }
 
   Widget _createBackButton(BuildContext context) {
@@ -158,6 +199,7 @@ class ReportDetailsContent extends StatelessWidget {
                 width: 30,
                 height: 30,
                 child: Image(
+                  color: Colors.black,
                   image: AssetImage(PathConstants.back),
                 ),
               ),

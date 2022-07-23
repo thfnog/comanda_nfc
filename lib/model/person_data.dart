@@ -7,10 +7,10 @@ class PersonData extends Register {
   final String cpf;
   final String phoneNumber;
 
-  PersonData(
-    this.uid,
-    this.cardId,
-    this.phoneNumber, {
+  PersonData({
+    this.uid = '',
+    this.cardId = '',
+    this.phoneNumber = '',
     required this.name,
     required this.cpf
   }) : super(uid, {'cardId': cardId, 'phoneNumber': phoneNumber},
