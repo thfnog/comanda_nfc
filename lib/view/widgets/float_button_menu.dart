@@ -1,3 +1,5 @@
+import 'package:comanda_nfc/view/pages/invoice/invoice_page.dart';
+import 'package:comanda_nfc/view/widgets/register_product_form.dart';
 import 'package:flutter/material.dart';
 
 import 'register_client_form.dart';
@@ -80,6 +82,7 @@ class _FloatButtonMenuState extends State<FloatButtonMenu>
               backgroundColor: Colors.blue[300],
               onPressed: () {
                 _showAction(context, 0);
+                _toggle();
               },
               child: const Icon(
                 Icons.person_add,
@@ -95,7 +98,10 @@ class _FloatButtonMenuState extends State<FloatButtonMenu>
             child: FloatingActionButton(
               backgroundColor: Colors.red[300],
               onPressed: () {
-                _showAction(context, 1);
+                InvoicePage();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => InvoicePage()));
+                _toggle();
               },
               child: const Icon(
                 Icons.payment_outlined,
@@ -111,7 +117,8 @@ class _FloatButtonMenuState extends State<FloatButtonMenu>
             child: FloatingActionButton(
               backgroundColor: Colors.green[300],
               onPressed: () {
-                _showAction(context, 2);
+                _showAction(context, 1);
+                _toggle();
               },
               child: const Icon(Icons.add_shopping_cart),
             ),
@@ -133,8 +140,7 @@ class _FloatButtonMenuState extends State<FloatButtonMenu>
 
   final List<Widget> _widgetOptions = <Widget>[
     RegisterClientForm(),
-    Text("Fechar comanda"),
-    Text("Adicionar produto"),
+    RegisterProductForm(),
   ];
 
   void _showAction(BuildContext context, int index) {

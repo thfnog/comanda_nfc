@@ -70,7 +70,7 @@ class HomeContent extends StatelessWidget {
                 icon: Icons.fastfood_sharp,
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => RegisterDetailsPage(
-                          register: DataConstants.products,
+                          register: DataConstants.productsRegister,
                         )))
               ),
               const SizedBox(width: 15),
@@ -100,7 +100,7 @@ class HomeContent extends StatelessWidget {
                   color: ColorConstants.reportsCardColor,
                   title: TextConstants.reportCardTitle,
                   description: TextConstants.reportCardDescription,
-                  icon: Icons.report_sharp,
+                  icon: Icons.analytics_outlined,
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (_) => ReportDetailsPage(reports: reports)))
               ),

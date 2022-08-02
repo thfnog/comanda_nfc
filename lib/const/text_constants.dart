@@ -53,4 +53,8 @@ class TextConstants {
   static const String reportCardTitle = "Relatório";
   static const String reportCardDescription = "Veja o relatório dos eventos, imprima, compartilhe e faça análises de suas vendas";
 
+  // Register Cards
+  static const String saveRegisterCardButton = "Salvar";
+  static const String panelRegisterCardDescription = "Arraste para cadastrar/Alterar";
+
 }
