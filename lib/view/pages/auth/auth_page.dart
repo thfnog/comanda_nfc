@@ -14,7 +14,6 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 
 /// Helper class to show a snackbar using the passed context.
 class ScaffoldSnackbar {
-  // ignore: public_member_api_docs
   ScaffoldSnackbar(this._context);
 
   /// The scaffold of current context.
@@ -38,7 +37,6 @@ class ScaffoldSnackbar {
 }
 
 /// The mode of the current auth session, either [AuthMode.login] or [AuthMode.register].
-// ignore: public_member_api_docs
 enum AuthMode { login, register, phone }
 
 extension on AuthMode {
@@ -51,7 +49,6 @@ extension on AuthMode {
 
 /// Entrypoint example for various sign-in flows with Firebase.
 class AuthGate extends StatefulWidget {
-  // ignore: public_member_api_docs
   const AuthGate({Key? key}) : super(key: key);
 
   @override

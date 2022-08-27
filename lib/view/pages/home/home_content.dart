@@ -4,8 +4,8 @@ import 'package:comanda_nfc/view/pages/report_details/page/report_details_page.d
 import 'package:flutter/material.dart';
 
 import '../../../const/color_constants.dart';
-import '../../../const/data_constants.dart';
 import '../../../const/text_constants.dart';
+import '../../../model/enums/cardType.dart';
 import '../register_details/page/register_details_page.dart';
 import 'home_card.dart';
 import 'home_statistics.dart';
@@ -30,7 +30,7 @@ class HomeContent extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 20),
         children: [
-          HomeStatistics(),
+          const HomeStatistics(),
           const SizedBox(height: 10),
           _createCardsList(context),
           const SizedBox(height: 25),
@@ -64,37 +64,34 @@ class HomeContent extends StatelessWidget {
             children: [
               const SizedBox(width: 20),
               HomeCard(
-                color: ColorConstants.productCardColor,
-                title: TextConstants.productsCardTitle,
-                description: TextConstants.productsCardDescription,
-                icon: Icons.fastfood_sharp,
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => RegisterDetailsPage(
-                          register: DataConstants.productsRegister,
-                        )))
-              ),
+                  color: ColorConstants.productCardColor,
+                  title: TextConstants.productsCardTitle,
+                  description: TextConstants.productsCardDescription,
+                  icon: Icons.fastfood_sharp,
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => RegisterDetailsPage(
+                          cardType: CardType.products
+                          )))),
               const SizedBox(width: 15),
               HomeCard(
-                color: ColorConstants.clientsCardColor,
-                title: TextConstants.clientsCardTitle,
-                description: TextConstants.clientsCardDescription,
-                icon: Icons.people,
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => RegisterDetailsPage(
-                          register: DataConstants.clients,
-                        )))
-              ),
+                  color: ColorConstants.clientsCardColor,
+                  title: TextConstants.clientsCardTitle,
+                  description: TextConstants.clientsCardDescription,
+                  icon: Icons.people,
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => RegisterDetailsPage(
+                          cardType: CardType.clients
+                          )))),
               const SizedBox(width: 15),
               HomeCard(
-                color: ColorConstants.providersCardColor,
-                title: TextConstants.providersCardTitle,
-                description: TextConstants.providersCardDescription,
-                icon: Icons.storefront_sharp,
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => RegisterDetailsPage(
-                          register: DataConstants.providers,
-                        )))
-              ),
+                  color: ColorConstants.providersCardColor,
+                  title: TextConstants.providersCardTitle,
+                  description: TextConstants.providersCardDescription,
+                  icon: Icons.storefront_sharp,
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => RegisterDetailsPage(
+                          cardType: CardType.providers
+                          )))),
               const SizedBox(width: 15),
               HomeCard(
                   color: ColorConstants.reportsCardColor,
@@ -102,8 +99,7 @@ class HomeContent extends StatelessWidget {
                   description: TextConstants.reportCardDescription,
                   icon: Icons.analytics_outlined,
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => ReportDetailsPage(reports: reports)))
-              ),
+                      builder: (_) => ReportDetailsPage(reports: reports)))),
               const SizedBox(width: 20),
             ],
           ),
@@ -115,7 +111,7 @@ class HomeContent extends StatelessWidget {
   List<Report> buildReport() {
     var products = List.generate(
         4,
-        (index) => ProductData(
+        (index) => ProductData(null,
             name: "Produto$index", quantity: index + 3, value: index * 5));
     var reports = List.generate(
         10,
@@ -144,12 +140,12 @@ class HomeContent extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.free_breakfast_outlined),
-          SizedBox(width: 20),
+          const Icon(Icons.free_breakfast_outlined),
+          const SizedBox(width: 20),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Text(
                   TextConstants.poweredBy,
                   style: TextStyle(
@@ -157,7 +153,7 @@ class HomeContent extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: 3),
                 Text(
                   TextConstants.companySlogan,
                   style: TextStyle(

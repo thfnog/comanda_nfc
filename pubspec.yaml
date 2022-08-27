@@ -43,10 +43,13 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   grouped_list: ^5.1.2
   adv_fab: ^1.0.5
+  json_annotation: ^4.6.0
 
 dev_dependencies:
   drive: 1.0.0-1.0.nullsafety.1
   http: ^0.13.3
+  build_runner: ^2.0.0
+  json_serializable: ^6.0.0
   flutter_test:
     sdk: flutter
 

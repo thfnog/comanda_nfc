@@ -1,14 +1,15 @@
+import 'package:comanda_nfc/model/enums/cardType.dart';
 import 'package:comanda_nfc/view/pages/register_details/widget/panel/register_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../const/color_constants.dart';
 import '../../../../const/path_constants.dart';
-import '../../../../model/register.dart' as data;
+import '../../../../model/register.dart';
 import '../../register_details/bloc/registerdetails_bloc.dart';
 
 class RegisterDetailsBody extends StatelessWidget {
-  final List<data.Register> register;
+  final List<Register> register;
   RegisterDetailsBody({required this.register});
 
   @override
@@ -27,7 +28,7 @@ class RegisterDetailsBody extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    register[0].title + " listados para gerenciar:",
+                    "${register[0].type.description} listados para gerenciar:",
                     style: TextStyle(
                       color: ColorConstants.textBlack,
                       fontSize: 18,
@@ -39,7 +40,6 @@ class RegisterDetailsBody extends StatelessWidget {
               ],
             ),
           ),
-
         ],
       ),
     );

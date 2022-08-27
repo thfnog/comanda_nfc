@@ -2,20 +2,18 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import '../../../../model/register.dart' as data;
+import '../../../../model/enums/cardType.dart';
 import '../../../../model/register.dart';
 
 part 'registerdetails_event.dart';
 part 'registerdetails_state.dart';
 
 class RegisterDetailsBloc extends Bloc<RegisterEvent, RegisterDetailsState> {
-  final List<data.Register> register;
-  final PanelController panelController = PanelController();
+  final CardType? cardType;
 
-  String uid = '';
+  final PanelController panelController = PanelController();
 
   final nameController = TextEditingController();
   final documentController = TextEditingController();
@@ -25,7 +23,9 @@ class RegisterDetailsBloc extends Bloc<RegisterEvent, RegisterDetailsState> {
   final valueController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  RegisterDetailsBloc({required this.register}) : super(WorkoutDetailsInitial());
+  var uid;
+
+  RegisterDetailsBloc({required this.cardType}) : super(RegisterDetailsInitial());
 
   @override
   Stream<RegisterDetailsState> mapEventToState(

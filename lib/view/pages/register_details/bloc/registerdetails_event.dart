@@ -5,6 +5,8 @@ abstract class RegisterEvent {}
 
 class BackTappedEvent extends RegisterEvent {}
 
+class OnTextChangedEvent extends RegisterEvent {}
+
 class RegisterCellTappedEvent extends RegisterEvent {
   final Register currentRegister;
   final Register? nextRegister;

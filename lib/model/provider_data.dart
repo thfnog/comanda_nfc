@@ -1,20 +1,20 @@
 import 'package:comanda_nfc/model/register.dart';
 
+import 'enums/cardType.dart';
+
 class ProviderData extends Register {
-  final String uid;
   final String providerName;
   final String cnpj;
   final String responsible;
   final String phoneNumber;
 
-  ProviderData({
-    this.uid = '',
+  ProviderData(uid, {
     required this.providerName,
     required this.cnpj,
     required this.responsible,
     required this.phoneNumber,
-  }) : super(uid, {'responsible': responsible, 'phoneNumber': phoneNumber}, name: providerName,
+  }) : super(uid, additionalInfo: {'responsible': responsible, 'phoneNumber': phoneNumber}, name: providerName,
       document: cnpj,
-      title: 'Fornecedores');
+      type: CardType.providers);
 
 }

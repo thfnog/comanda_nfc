@@ -3,24 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../const/color_constants.dart';
-import '../../../../../model/register.dart' as data;
+import '../../../../../model/register.dart';
 import '../../bloc/registerdetails_bloc.dart';
 
 class RegisterList extends StatelessWidget {
-  final List<data.Register> register;
+  final List<Register>? register;
   final BuildContext context;
 
-  const RegisterList({required this.register, required this.context});
+  const RegisterList({super.key, required this.register, required this.context});
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: EdgeInsets.only(top: 10, bottom: 100),
-      itemCount: register.length,
+      padding: const EdgeInsets.only(top: 10, bottom: 100),
+      itemCount: register?.length ?? 0,
       itemBuilder: (context, index) {
         return RegisterCell(
-          currentRegister: register[index],
-          nextRegister: index == register.length - 1 ? null : register[index + 1]
+          currentRegister: register?[index],
+          nextRegister: index == (register?.length ?? 0) - 1 ? null : register?[index + 1]
         );
       },
       separatorBuilder: (context, index) {
@@ -31,10 +31,11 @@ class RegisterList extends StatelessWidget {
 }
 
 class RegisterCell extends StatelessWidget {
-  final data.Register currentRegister;
-  final data.Register? nextRegister;
+  final Register? currentRegister;
+  final Register? nextRegister;
 
   const RegisterCell({
+    super.key,
     required this.currentRegister,
     required this.nextRegister,
   });
@@ -45,10 +46,10 @@ class RegisterCell extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(40),
       onTap: () {
-        bloc.uid = currentRegister.uid;
-        bloc.nameController.text = currentRegister.name;
-        bloc.documentController.text = currentRegister.document;
-        currentRegister.additionalInfo.forEach((key, value) {
+        bloc.uid = currentRegister?.uid;
+        bloc.nameController.text = currentRegister?.name ?? '';
+        bloc.documentController.text = currentRegister?.document ?? '';
+        currentRegister?.additionalInfo.forEach((key, value) {
           if (key == 'responsible') bloc.contactController.text = value;
           if (key == 'phoneNumber') bloc.phoneNumberController.text = value;
           if (key == 'quantity') bloc.quantityController.text = value;
@@ -93,7 +94,7 @@ class RegisterCell extends StatelessWidget {
       height: 70,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        image: DecorationImage(
+        image: const DecorationImage(
           image: AssetImage(PathConstants.pilates),
           fit: BoxFit.contain,
         ),
@@ -106,25 +107,25 @@ class RegisterCell extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          currentRegister.name,
-          style: TextStyle(
+          currentRegister?.name ?? '',
+          style: const TextStyle(
             color: ColorConstants.textColor,
             fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
         ),
-        if (currentRegister.document.isNotEmpty) Text(
-          currentRegister.document,
-          style: TextStyle(
+        if (currentRegister?.document.isNotEmpty ?? false) Text(
+          currentRegister?.document ?? '',
+          style: const TextStyle(
             color: ColorConstants.textColor,
             fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
         ),
-        for(String info in currentRegister.additionalInfo.values)
+        for(String info in currentRegister?.additionalInfo.values ?? [])
           Text(
             info,
-            style: TextStyle(
+            style: const TextStyle(
               color: ColorConstants.textBlack,
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -135,7 +136,7 @@ class RegisterCell extends StatelessWidget {
   }
 
   Widget _createRightArrow() {
-    return RotatedBox(
+    return const RotatedBox(
       quarterTurns: 2,
       child: Image(
         image: AssetImage(PathConstants.back),

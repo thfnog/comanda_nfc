@@ -3,7 +3,7 @@ part of 'registerdetails_bloc.dart';
 @immutable
 abstract class RegisterDetailsState {}
 
-class WorkoutDetailsInitial extends RegisterDetailsState {}
+class RegisterDetailsInitial extends RegisterDetailsState {}
 
 class RegisterData extends RegisterDetailsState {}
 
