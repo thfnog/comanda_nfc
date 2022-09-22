@@ -1,10 +1,13 @@
 import 'package:comanda_nfc/const/text_constants.dart';
 import 'package:comanda_nfc/model/product_data.dart';
+import 'package:comanda_nfc/view/common_widgets/custom_control_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../const/path_constants.dart';
 import '../../../../../model/enums/cardType.dart';
+import '../../../../../model/person_data.dart';
+import '../../../../../model/provider_data.dart';
 import '../../../../../model/register.dart';
 import '../../../../../repositories/cloud_functions.dart';
 import '../../../../common_widgets/custom_button.dart';
@@ -13,8 +16,9 @@ import '../../bloc/registerdetails_bloc.dart';
 
 class RegisterDetailsPanel extends StatelessWidget {
   final Stream<List<Register>>? register;
+  final CardType? cardType;
 
-  const RegisterDetailsPanel({super.key, required this.register});
+  const RegisterDetailsPanel({super.key, required this.register, required this.cardType});
 
   @override
   Widget build(BuildContext context) {
@@ -39,21 +43,68 @@ class RegisterDetailsPanel extends StatelessWidget {
       children: [
         const SizedBox(height: 15),
         _createRectangle(),
-        const SizedBox(height: 15),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _createHeader(),
-              const SizedBox(height: 20),
+              _createHeader(context),
               _createForm(context, data),
-              const SizedBox(height: 20),
               _createSaveButton(context, data)
             ],
           ),
         ),
       ],
     );
+  }
+
+  Widget _deleteItemButton(BuildContext context) {
+    final bloc = BlocProvider.of<RegisterDetailsBloc>(context);
+    return CustomControlButton(
+        title: "Excluir Item",
+        iconData: Icons.delete_forever_rounded,
+        onTap: () {
+          CloudFunctions().
+            deleteByCardType(CardType.products, bloc.nameController.value.text);
+          cleanFields(bloc);
+          clonePanel(bloc);
+        });
+  }
+
+  Widget _cleanFieldsButton(BuildContext context) {
+    final bloc = BlocProvider.of<RegisterDetailsBloc>(context);
+    return CustomControlButton(
+        title: "Novo Item",
+        iconData: Icons.clear_all_outlined,
+        onTap: () {
+          cleanFields(bloc);
+      });
+  }
+
+  void cleanFields(RegisterDetailsBloc bloc) {
+    bloc.nameController.clear();
+    bloc.documentController.clear();
+    bloc.contactController.clear();
+    bloc.phoneNumberController.clear();
+    bloc.quantityController.clear();
+    bloc.valueController.clear();
+    bloc.descriptionController.clear();
+  }
+
+  Widget _closePanelButton(BuildContext context) {
+    final bloc = BlocProvider.of<RegisterDetailsBloc>(context);
+    return CustomControlButton(
+        title: "Fechar Tela",
+        iconData: Icons.close,
+        onTap: () {
+          clonePanel(bloc);
+        });
+  }
+
+  void clonePanel(RegisterDetailsBloc bloc) {
+    if (bloc.panelController.isAttached &&
+        bloc.panelController.isPanelOpen) {
+      bloc.panelController.animatePanelToPosition(0.0);
+    }
   }
 
   Widget _createSaveButton(BuildContext context, List<Register>? data) {
@@ -63,18 +114,17 @@ class RegisterDetailsPanel extends StatelessWidget {
         child: CustomButton(
           title: TextConstants.saveRegisterCardButton,
           onTap: () {
-            if (bloc.panelController.isAttached &&
-                bloc.panelController.isPanelOpen) {
-              bloc.panelController.animatePanelToPosition(0.0);
-            }
+            clonePanel(bloc);
 
-            switch(data?.first.type) {
+            switch (cardType) {
               case CardType.products:
                 saveProducts(bloc);
                 break;
-              case CardType.clients: // TODO: salvar clientes
+              case CardType.clients:
+                saveClients(bloc);
                 break;
-              case CardType.providers: // TODO: salvar fornecedores
+              case CardType.providers:
+                saveProviders(bloc);
                 break;
               default:
                 break;
@@ -86,28 +136,63 @@ class RegisterDetailsPanel extends StatelessWidget {
   void saveProducts(RegisterDetailsBloc bloc) {
     var productData = ProductData(
         name: bloc.nameController.value.text,
-        quantity:
-        int.tryParse(bloc.quantityController.value.text) ?? (0),
+        quantity: int.tryParse(bloc.quantityController.value.text) ?? (0),
         value: double.tryParse(bloc.valueController.value.text) ?? (0),
         description: bloc.descriptionController.value.text,
         bloc.uid);
     CloudFunctions().saveByCardType(CardType.products, productData.toMap());
   }
 
+  void saveClients(RegisterDetailsBloc bloc) {
+    var personData = PersonData(
+        name: bloc.nameController.value.text,
+        cpf: bloc.documentController.value.text,
+        phoneNumber: bloc.phoneNumberController.value.text,
+        bloc.uid);
+    CloudFunctions().saveByCardType(CardType.clients, personData.toMap());
+  }
+
+  void saveProviders(RegisterDetailsBloc bloc) {
+    var providerData = ProviderData(
+        providerName: bloc.nameController.value.text,
+        cnpj: bloc.documentController.value.text,
+        responsible: bloc.contactController.value.text,
+        phoneNumber: bloc.phoneNumberController.value.text,
+        bloc.uid);
+    CloudFunctions().saveByCardType(CardType.providers, providerData.toMap());
+  }
+
   Widget _createRectangle() {
     return const Image(image: AssetImage(PathConstants.rectangle));
   }
 
-  Widget _createHeader() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Text(
-        TextConstants.panelRegisterCardDescription,
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+  Widget _createHeader(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton.icon(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.upload,
+            size: 24.0,
+            color: Colors.black,
+          ),
+          label: Text(
+            textAlign: TextAlign.center,
+            TextConstants.panelRegisterCardDescription,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [_cleanFieldsButton(context), _deleteItemButton(context), _closePanelButton(context)],
+        )
+      ],
     );
   }
 
@@ -131,10 +216,10 @@ class RegisterDetailsPanel extends StatelessWidget {
   }
 
   Widget buildListView(RegisterDetailsBloc bloc, List<Register>? data) {
-    if (data?[0].type == CardType.products) {
+    if (cardType == CardType.products) {
       return productsListView(bloc);
     } else {
-      return clientListView(bloc, data);
+      return clientListView(bloc, data); // TODO: Precisa passar de alguma forma o tipo aqui pra construir os campos
     }
   }
 
@@ -198,8 +283,8 @@ class RegisterDetailsPanel extends StatelessWidget {
       padding: const EdgeInsets.all(5),
       scrollDirection: Axis.vertical,
       children: [
-        if (data?[0].type == CardType.clients) const SizedBox(height: 20),
-        if (data?[0].type == CardType.clients)
+        if (cardType == CardType.clients) const SizedBox(height: 20),
+        if (cardType == CardType.clients)
           CustomTextField(
             title: "Nome",
             placeholder: "Adicione um nome",
@@ -210,8 +295,8 @@ class RegisterDetailsPanel extends StatelessWidget {
               // bloc.add(OnTextChangedEvent());
             },
           ),
-        if (data?[0].type == CardType.clients) const SizedBox(height: 20),
-        if (data?[0].type == CardType.clients)
+        if (cardType == CardType.clients) const SizedBox(height: 20),
+        if (cardType == CardType.clients)
           CustomTextField(
             title: "CPF",
             placeholder: "Adicione o CPF",
@@ -222,8 +307,8 @@ class RegisterDetailsPanel extends StatelessWidget {
               // bloc.add(OnTextChangedEvent());
             },
           ),
-        if (data?[0].type == CardType.providers) const SizedBox(height: 20),
-        if (data?[0].type == CardType.providers)
+        if (cardType == CardType.providers) const SizedBox(height: 20),
+        if (cardType == CardType.providers)
           CustomTextField(
             title: "Fornecedor",
             placeholder: "Adicione o nome da empresa",
@@ -234,8 +319,8 @@ class RegisterDetailsPanel extends StatelessWidget {
               // bloc.add(OnTextChangedEvent());
             },
           ),
-        if (data?[0].type == CardType.providers) const SizedBox(height: 20),
-        if (data?[0].type == CardType.providers)
+        if (cardType == CardType.providers) const SizedBox(height: 20),
+        if (cardType == CardType.providers)
           CustomTextField(
             title: "CNPJ",
             placeholder: "Adicione o CNPJ",
@@ -246,8 +331,8 @@ class RegisterDetailsPanel extends StatelessWidget {
               // bloc.add(OnTextChangedEvent());
             },
           ),
-        if (data?[0].type == CardType.providers) const SizedBox(height: 20),
-        if (data?[0].type == CardType.providers)
+        if (cardType == CardType.providers) const SizedBox(height: 20),
+        if (cardType == CardType.providers)
           CustomTextField(
             title: "Contato",
             placeholder: "Adicione o contato",
@@ -258,11 +343,9 @@ class RegisterDetailsPanel extends StatelessWidget {
               // bloc.add(OnTextChangedEvent());
             },
           ),
-        if (data?[0].type == CardType.clients ||
-            data?[0].type == CardType.providers)
+        if (cardType == CardType.clients || cardType == CardType.providers)
           const SizedBox(height: 20),
-        if (data?[0].type == CardType.clients ||
-            data?[0].type == CardType.providers)
+        if (cardType == CardType.clients || cardType == CardType.providers)
           CustomTextField(
             title: "Telefone",
             placeholder: "Adicione o telefone",

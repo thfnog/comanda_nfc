@@ -10,8 +10,9 @@ import '../bloc/registerdetails_bloc.dart';
 
 class RegisterDetailsBody extends StatelessWidget {
   final Stream<List<Register>>? register;
+  final CardType? cardType;
 
-  const RegisterDetailsBody({required this.register});
+  const RegisterDetailsBody({required this.register, required this.cardType});
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +23,11 @@ class RegisterDetailsBody extends StatelessWidget {
           return const Text('Something went wrong');
         }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading");
         }
 
-        return buildContainer(context, snapshot!.data);
+        return buildContainer(context, snapshot.data);
       },
     );
   }
@@ -46,7 +47,7 @@ class RegisterDetailsBody extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  data?[0].type.description ?? '' + " listados para gerenciar:",
+                  "${cardType?.description} listados para gerenciar:",
                   style: TextStyle(
                     color: ColorConstants.textBlack,
                     fontSize: 18,

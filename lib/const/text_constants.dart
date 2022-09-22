@@ -55,6 +55,6 @@ class TextConstants {
 
   // Register Cards
   static const String saveRegisterCardButton = "Salvar";
-  static const String panelRegisterCardDescription = "Arraste para cadastrar/Alterar";
+  static const String panelRegisterCardDescription = "Arraste para gerenciar";
 
 }

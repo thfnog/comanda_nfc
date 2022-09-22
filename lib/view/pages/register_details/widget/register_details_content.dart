@@ -27,12 +27,12 @@ class RegisterDetailsContent extends StatelessWidget {
 
   Widget _createSlidingUpPanel(BuildContext context) {
     final bloc = BlocProvider.of<RegisterDetailsBloc>(context);
-    Stream<List<Register>>? list = CloudFunctions().getByCardType(cardType);
+    Stream<List<Register>>? list = CloudFunctions().getByCardType(cardType); // TODO: Parece que esta pegando estatico ( se entrar em qlqr um, será o ultimo salvo )
     return SlidingUpPanel(
       controller: bloc.panelController,
-      panel: RegisterDetailsPanel(register: list),
-      body: RegisterDetailsBody(register: list),
-      minHeight: MediaQuery.of(context).size.height * 0.20,
+      panel: RegisterDetailsPanel(register: list, cardType: cardType),
+      body: RegisterDetailsBody(register: list, cardType: cardType),
+      minHeight: MediaQuery.of(context).size.height * 0.11,
       maxHeight: MediaQuery.of(context).size.height * 0.80,
       isDraggable: true,
       borderRadius: BorderRadius.only(
