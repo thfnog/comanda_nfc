@@ -8,7 +8,7 @@ part of 'provider_data.dart';
 
 ProviderData _$ProviderDataFromJson(Map<String, dynamic> json) => ProviderData(
       json['uid'],
-      providerName: json['providerName'] as String,
+      providerName: json['name'] as String,
       cnpj: json['document'] as String,
       responsible: json['additionalInfo']['responsible'] as String? ?? '',
       phoneNumber: json['additionalInfo']['phoneNumber'] as String? ?? '',

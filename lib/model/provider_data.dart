@@ -27,7 +27,7 @@ class ProviderData extends Register {
 
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
+      'name': providerName,
       'document': cnpj,
       'additionalInfo': {
         'phoneNumber': phoneNumber.toString(),

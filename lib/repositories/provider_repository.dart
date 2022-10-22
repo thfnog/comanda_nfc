@@ -37,7 +37,7 @@ class ProviderRepository {
     }
   }
 
-  Stream<List<ProviderData>> getRealtimeProviders() { // TODO: Tratar vazio
+  Stream<List<ProviderData>> getRealtimeProviders() {
     return users.doc(currentUser?.uid).snapshots().map((value) {
       var providersField = getProvidersField(value);
       return providersField.map((e) {

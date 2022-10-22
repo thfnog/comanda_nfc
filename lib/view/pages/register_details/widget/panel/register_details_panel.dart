@@ -64,7 +64,7 @@ class RegisterDetailsPanel extends StatelessWidget {
         iconData: Icons.delete_forever_rounded,
         onTap: () {
           CloudFunctions().
-            deleteByCardType(CardType.products, bloc.nameController.value.text);
+            deleteByCardType(cardType!, bloc.nameController.value.text);
           cleanFields(bloc);
           clonePanel(bloc);
         });
@@ -219,7 +219,7 @@ class RegisterDetailsPanel extends StatelessWidget {
     if (cardType == CardType.products) {
       return productsListView(bloc);
     } else {
-      return clientListView(bloc, data); // TODO: Precisa passar de alguma forma o tipo aqui pra construir os campos
+      return clientListView(bloc, data);
     }
   }
 
